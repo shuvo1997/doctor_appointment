@@ -16,13 +16,12 @@ class _DoctorListState extends State<DoctorList> {
       body: ListView(
         children: [
           ListItem(true),
-          ListItem(false),
+          ListItem(true),
           ListItem(true),
           ListItem(false),
         ],
       ),
     );
-    ;
   }
 
   Widget ListItem(bool active) {

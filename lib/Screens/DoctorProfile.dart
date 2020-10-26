@@ -12,7 +12,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
   List<Icon> rating = [];
   CalendarController _calendarController;
   DateTime _selectedDate = DateTime.now();
-
+  bool dateflag = true;
   void ratingBuilder() {
     for (int i = 0; i < 5; i++) {
       rating.add(ratingIcon());
@@ -89,28 +89,37 @@ class _DoctorProfileState extends State<DoctorProfile> {
   }
 
   _onButtonPressed(context, DateTime dateTime) {
-    Alert(
+    if (dateflag) {
+      Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Confirmation",
+          desc: "Are you sure you want to take appointment on " +
+              dateTime.year.toString() +
+              "-" +
+              dateTime.month.toString() +
+              "-" +
+              dateTime.day.toString() +
+              " at 7:00PM",
+          buttons: [
+            DialogButton(
+                child: Text(
+                  'YES',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Payment()));
+                })
+          ]).show();
+    } else {
+      Alert(
         context: context,
-        type: AlertType.warning,
-        title: "Confirmation",
-        desc: "Are you sure you want to take appointment on " +
-            dateTime.year.toString() +
-            "-" +
-            dateTime.month.toString() +
-            "-" +
-            dateTime.day.toString() +
-            " at 7:00PM",
-        buttons: [
-          DialogButton(
-              child: Text(
-                'YES',
-                style: TextStyle(fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Payment()));
-              })
-        ]).show();
+        type: AlertType.error,
+        title: "Invaid Date",
+        desc: "The date you selected is invalid.",
+      ).show();
+    }
   }
 
   Widget _timeShower() {
@@ -122,18 +131,10 @@ class _DoctorProfileState extends State<DoctorProfile> {
 
   Widget _dateShower() {
     DateTime today = DateTime.now();
-    if (_selectedDate.month == today.month && _selectedDate.day == today.day) {
-      return Text(
-        'Selected Date is: ' +
-            _selectedDate.year.toString() +
-            '-' +
-            _selectedDate.month.toString() +
-            '-' +
-            _selectedDate.day.toString(),
-        style: TextStyle(fontSize: 20),
-      );
-    }
-    if (_selectedDate.month > today.month && _selectedDate.day < today.day) {
+    if ((_selectedDate.month > today.month && _selectedDate.day < today.day) ||
+        (_selectedDate.month >= today.month &&
+            _selectedDate.day >= today.day)) {
+      dateflag = true;
       return Text(
         'Selected Date is: ' +
             _selectedDate.year.toString() +
@@ -145,6 +146,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
       );
     }
     if (_selectedDate.month < today.month || _selectedDate.day < today.day) {
+      dateflag = false;
       return Text(
         'Select a valid date',
         style: TextStyle(fontSize: 20, color: Colors.red),
