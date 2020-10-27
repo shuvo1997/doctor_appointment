@@ -1,6 +1,8 @@
+import 'package:doctorappointment/Screens/Authenticate/register.dart';
 import 'package:flutter/material.dart';
 
 class Payment extends StatefulWidget {
+  Register register = new Register();
   @override
   _PaymentState createState() => _PaymentState();
 }
