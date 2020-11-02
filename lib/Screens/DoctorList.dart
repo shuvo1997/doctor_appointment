@@ -1,4 +1,5 @@
 import 'package:doctorappointment/Screens/DoctorProfile.dart';
+import 'package:doctorappointment/Services/auth.dart';
 import 'package:flutter/material.dart';
 
 class DoctorList extends StatefulWidget {
@@ -7,11 +8,21 @@ class DoctorList extends StatefulWidget {
 }
 
 class _DoctorListState extends State<DoctorList> {
+  final AuthService _auth = new AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Doctor List')),
+        actions: [
+          FlatButton.icon(
+              onPressed: () {
+                _auth.signOut();
+              },
+              icon: Icon(Icons.exit_to_app),
+              label: Text('Log Out'))
+        ],
       ),
       body: ListView(
         children: [

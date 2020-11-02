@@ -1,14 +1,16 @@
-import 'package:doctorappointment/Screens/Authenticate/register.dart';
+import 'package:doctorappointment/Services/Mailer.dart';
+import 'package:doctorappointment/Services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Payment extends StatefulWidget {
-  Register register = new Register();
   @override
   _PaymentState createState() => _PaymentState();
 }
 
 class _PaymentState extends State<Payment> {
-  List<Card> logos = [];
+  List<MyCard> logos = [];
   List<String> imageNames = [
     'bkash.png',
     'rocket.png',
@@ -16,15 +18,8 @@ class _PaymentState extends State<Payment> {
     'visa.png'
   ];
 
-  _buildPaymentCards() {
-    for (int i = 0; i < 4; i++) {
-      logos.add(_paymentCard('assets/images/' + imageNames[i]));
-    }
-  }
-
   @override
   void initState() {
-    _buildPaymentCards();
     super.initState();
   }
 
@@ -36,29 +31,53 @@ class _PaymentState extends State<Payment> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              Text(
-                'To continue please pay 100tk using these payment methods',
-                style: TextStyle(fontSize: 20),
-              ),
-              Flexible(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  children: logos,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  'To continue please pay 100tk using these payment methods',
+                  style: TextStyle(fontSize: 20),
                 ),
-              ),
-            ],
+                MyCard(string: 'assets/images/bkash.png'),
+                MyCard(string: 'assets/images/nagad.png'),
+                MyCard(string: 'assets/images/rocket.png'),
+                MyCard(string: 'assets/images/visa.png'),
+              ],
+            ),
           ),
         ));
   }
+}
 
-  Widget _paymentCard(String string) {
+class MyCard extends StatelessWidget {
+  final String string;
+  MyCard({this.string});
+
+  String email = '';
+
+  MailService _mailer = new MailService();
+
+  _onPaymentButtonClick(String email) {
+    _mailer.sendMail(email);
+    print('email sent');
+  }
+
+  Future getEmailId() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    email = user.email;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       semanticContainer: true,
       child: InkWell(
-        onTap: () {
-          print(string);
+        onTap: () async {
+          await getEmailId();
+          print(email);
+          await _onPaymentButtonClick(email);
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Yay! An email has been sent to ' + email)));
         },
         child: Image.asset(string),
       ),
