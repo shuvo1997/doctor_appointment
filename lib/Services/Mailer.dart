@@ -2,18 +2,38 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 class MailService {
-  sendMail(String email) async {
+  sendMail(String email, String doctorName, String chamber, String address,
+      String time, DateTime dateTime) async {
     String username = 'shuvoauto@gmail.com';
     String password = 'sukumar123';
 
+    print(address);
+    String text =
+        "<h3>Appointment</h3>Hello Sir,<br> You have an appointment with " +
+            doctorName +
+            " on " +
+            dateTime.day.toString() +
+            "/" +
+            dateTime.month.toString() +
+            "/" +
+            dateTime.year.toString() +
+            " " +
+            time +
+            ". Please make sure you reach at " +
+            chamber +
+            " situated at " +
+            address +
+            "." +
+            "<br> Thank you.";
+
     final smtpServer = gmail(username, password);
 
+    print(doctorName);
     final message = Message()
       ..from = Address(username, 'Doctor Appointment')
       ..recipients.add(email)
       ..subject = 'Doctor Appointment Notification'
-      ..html =
-          "<h1>You Have An Appointment</h1>\n<p>Hello ,You have an appointment on </p>";
+      ..html = text;
 
     try {
       final sendReport = await send(message, smtpServer);

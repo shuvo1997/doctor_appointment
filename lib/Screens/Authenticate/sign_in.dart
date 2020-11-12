@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
                     children: [
                       Container(
                         child: Image(
-                          image: AssetImage('assets/images/DOCTOR.png'),
+                          image: AssetImage('assets/images/doctor.png'),
                         ),
                       ),
                       Form(
@@ -114,9 +114,12 @@ class _SignInState extends State<SignIn> {
                                   TextStyle(color: Colors.red, fontSize: 18.0),
                             ),
                             Text(
-                              'Do not have an account?',
+                              'Don\'t have an account?',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 18.0),
+                            ),
+                            SizedBox(
+                              height: 25,
                             ),
                             RaisedButton.icon(
                                 padding: EdgeInsets.all(10.0),

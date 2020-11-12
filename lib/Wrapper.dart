@@ -3,6 +3,7 @@ import 'package:doctorappointment/Screens/DoctorList.dart';
 import 'package:doctorappointment/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:doctorappointment/Screens/DoctorCategory.dart';
 
 class Wrapper extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class Wrapper extends StatelessWidget {
     if (user == null) {
       return Authenticate();
     } else {
-      return DoctorList();
+      return DoctorCategory();
     }
   }
 }

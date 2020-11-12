@@ -20,6 +20,9 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String error = '';
+  String name = '';
+  String age = '';
+  String blood = '';
 
   bool loading = false;
 
@@ -35,16 +38,56 @@ class _RegisterState extends State<Register> {
                       EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
                         child: Image(
-                          image: AssetImage('assets/images/DOCTOR.png'),
+                          image: AssetImage('assets/images/doctor.png'),
                         ),
                       ),
                       Form(
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
+                            TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: 'Name'),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Enter your name' : null,
+                              onChanged: (val) {
+                                setState(() {
+                                  name = val;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: 'Age'),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Enter your age' : null,
+                              onChanged: (val) {
+                                setState(() {
+                                  age = val;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: 'Blood Group'),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Enter your blood group' : null,
+                              onChanged: (val) {
+                                setState(() {
+                                  blood = val;
+                                });
+                              },
+                            ),
                             SizedBox(
                               height: 20.0,
                             ),
@@ -97,7 +140,12 @@ class _RegisterState extends State<Register> {
                                   });
                                   dynamic result =
                                       await _auth.registerWithEmailAndPassword(
-                                          email, password);
+                                    email,
+                                    password,
+                                    name,
+                                    age,
+                                    blood,
+                                  );
                                   //Validation
                                   if (result is String) {
                                     setState(() {
@@ -116,10 +164,16 @@ class _RegisterState extends State<Register> {
                               style:
                                   TextStyle(color: Colors.red, fontSize: 18.0),
                             ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Text(
                               'Already have an account?',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 18.0),
+                            ),
+                            SizedBox(
+                              height: 20,
                             ),
                             RaisedButton.icon(
                                 padding: EdgeInsets.all(10.0),

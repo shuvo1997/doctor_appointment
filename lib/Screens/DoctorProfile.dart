@@ -2,26 +2,38 @@ import 'package:doctorappointment/Screens/Payment.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:doctorappointment/shared/constants.dart';
 
 class DoctorProfile extends StatefulWidget {
+  final String name;
+  final String expertise;
+  final String chamber;
+  final String address;
+  final String time;
+  final String qualification;
+
+  DoctorProfile(
+      {this.name,
+      this.expertise,
+      this.address,
+      this.chamber,
+      this.time,
+      this.qualification});
+
   @override
   _DoctorProfileState createState() => _DoctorProfileState();
 }
 
 class _DoctorProfileState extends State<DoctorProfile> {
-  List<Icon> rating = [];
   CalendarController _calendarController;
   DateTime _selectedDate = DateTime.now();
   bool dateflag = true;
-  void ratingBuilder() {
-    for (int i = 0; i < 5; i++) {
-      rating.add(ratingIcon());
-    }
-  }
+
+  @override
+  DoctorProfile get widget => super.widget;
 
   @override
   void initState() {
-    ratingBuilder();
     _calendarController = CalendarController();
     super.initState();
   }
@@ -30,13 +42,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
   void dispose() {
     _calendarController.dispose();
     super.dispose();
-  }
-
-  Widget ratingIcon() {
-    return Icon(
-      Icons.star,
-      color: Colors.yellow[600],
-    );
   }
 
   void _onDaySelected(DateTime day, List events, List holidays) {
@@ -56,30 +61,101 @@ class _DoctorProfileState extends State<DoctorProfile> {
         padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
                 radius: 75,
                 backgroundImage: AssetImage('assets/images/doctor.png'),
               ),
+              SizedBox(
+                height: 20,
+              ),
               Text(
-                'Doctor Name',
+                widget.name,
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-              Text(
-                'Area of specialization',
-                style: TextStyle(fontSize: 18),
+              SizedBox(
+                height: 10,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: rating,
+              Text(
+                widget.expertise,
+                style: TextStyle(fontSize: 18, letterSpacing: 2.0),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                widget.qualification,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                widget.chamber,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 3.0),
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: ExpansionTile(
+                  childrenPadding: EdgeInsets.all(10.0),
+                  children: [
+                    Text(
+                      widget.address,
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                  ],
+                  leading: Icon(
+                    Icons.home,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Address',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
               ),
               _expandableCalender(),
+              SizedBox(
+                height: 10,
+              ),
               _dateShower(),
+              SizedBox(
+                height: 10,
+              ),
               _timeShower(),
-              FlatButton(
-                onPressed: () => _onButtonPressed(context, _selectedDate),
-                child: Text('Take Appointment'),
-                color: Colors.red,
+              SizedBox(
+                height: 10,
+              ),
+              RaisedButton.icon(
+                padding: EdgeInsets.all(10.0),
+                shape: RoundedRectangleBorder(borderRadius: borderRadius),
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () =>
+                    _onButtonPressed(context, _selectedDate, widget.time),
+                label: Text(
+                  'Take Appointment',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                color: Colors.blue,
               )
             ],
           ),
@@ -88,7 +164,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
     );
   }
 
-  _onButtonPressed(context, DateTime dateTime) {
+  _onButtonPressed(context, DateTime dateTime, String time) {
     if (dateflag) {
       Alert(
           context: context,
@@ -100,16 +176,25 @@ class _DoctorProfileState extends State<DoctorProfile> {
               dateTime.month.toString() +
               "-" +
               dateTime.day.toString() +
-              " at 7:00PM",
+              " at  " +
+              time,
           buttons: [
             DialogButton(
                 child: Text(
                   'YES',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Payment()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Payment(
+                                doctorName: widget.name,
+                                address: widget.address,
+                                chamber: widget.chamber,
+                                time: widget.time,
+                                dateTime: _selectedDate,
+                              )));
                 })
           ]).show();
     } else {
@@ -124,7 +209,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
 
   Widget _timeShower() {
     return Text(
-      'Time: 7PM',
+      'Time: ' + widget.time,
       style: TextStyle(fontSize: 20),
     );
   }
@@ -155,11 +240,26 @@ class _DoctorProfileState extends State<DoctorProfile> {
   }
 
   Widget _expandableCalender() {
-    return ExpansionTile(
-      title: Text(
-        'Pick a date from below',
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 3.0),
+          borderRadius: BorderRadius.circular(10.0)),
+      child: ExpansionTile(
+        leading: Icon(
+          Icons.calendar_today,
+          color: Colors.black,
+        ),
+        title: Text(
+          'Tap here to view calender',
+          style: TextStyle(color: Colors.black),
+        ),
+        trailing: Icon(
+          Icons.arrow_drop_down,
+          color: Colors.black,
+          size: 30,
+        ),
+        children: [_buildTableCalender()],
       ),
-      children: [_buildTableCalender()],
     );
   }
 
