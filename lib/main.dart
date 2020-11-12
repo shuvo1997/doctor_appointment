@@ -1,3 +1,6 @@
+import 'package:doctorappointment/Screens/Authenticate/sign_in.dart';
+import 'package:doctorappointment/Screens/DoctorCategory.dart';
+import 'package:doctorappointment/Screens/FinishPage.dart';
 import 'package:doctorappointment/Services/auth.dart';
 import 'package:doctorappointment/Wrapper.dart';
 import 'package:doctorappointment/models/user.dart';
@@ -15,6 +18,11 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       child: MaterialApp(
         home: Wrapper(),
+        routes: {
+          "/home": (_) => DoctorCategory(),
+          "/finish": (_) => FinishPage(),
+          "/signin": (_) => SignIn(),
+        },
       ),
     );
   }

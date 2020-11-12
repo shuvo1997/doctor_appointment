@@ -1,3 +1,4 @@
+import 'package:doctorappointment/Screens/FinishPage.dart';
 import 'package:doctorappointment/Services/Mailer.dart';
 import 'package:doctorappointment/Services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -146,6 +147,7 @@ class MyCard extends StatelessWidget {
             await _onPaymentButtonClick(email);
             Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text('Yay! An email has been sent to ' + email)));
+            Navigator.pushNamedAndRemoveUntil(context, "/finish", (r) => false);
           },
           child: Image.asset(string),
         ),

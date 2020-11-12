@@ -26,20 +26,6 @@ class _DoctorListState extends State<DoctorList> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Doctor List'),
-          actions: [
-            FlatButton.icon(
-                onPressed: () {
-                  _auth.signOut();
-                },
-                icon: Icon(
-                  Icons.exit_to_app,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Log Out',
-                  style: TextStyle(color: Colors.white),
-                ))
-          ],
         ),
         body: StreamBuilder(
           stream: Firestore.instance.collection(widget.category).snapshots(),
