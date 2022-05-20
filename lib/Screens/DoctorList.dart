@@ -16,8 +16,6 @@ class DoctorList extends StatefulWidget {
 }
 
 class _DoctorListState extends State<DoctorList> {
-  final AuthService _auth = new AuthService();
-
   @override
   DoctorList get widget => super.widget;
 
@@ -55,7 +53,7 @@ class _DoctorListState extends State<DoctorList> {
     return ListTile(
       leading: CircleAvatar(
         radius: 25,
-        backgroundImage: AssetImage('assets/images/doctor.png'),
+        backgroundImage: AssetImage('assets/images/doctor_appointment.png'),
       ),
       title: Text(name),
       subtitle: Text(expertise),

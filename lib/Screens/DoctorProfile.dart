@@ -65,7 +65,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
             children: [
               CircleAvatar(
                 radius: 75,
-                backgroundImage: AssetImage('assets/images/doctor.png'),
+                backgroundImage:
+                    AssetImage('assets/images/doctor_appointment.png'),
               ),
               SizedBox(
                 height: 20,

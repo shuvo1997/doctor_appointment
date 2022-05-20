@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctorappointment/Services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:doctorappointment/models/user.dart';
@@ -7,6 +8,7 @@ class AuthService {
 
   //create user from firebase user
   User _userFromFirebaseUser(FirebaseUser user) {
+//    print(user.email);
     return user != null ? User(uid: user.uid) : null;
   }
 
@@ -31,7 +33,7 @@ class AuthService {
 
   //register using email and password
   Future registerWithEmailAndPassword(String email, String password,
-      String name, String age, String blood) async {
+      String name, String age, String blood, String userType) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -39,7 +41,7 @@ class AuthService {
 
       //create a new document for the user with the uid
       await DatabaseService(uid: user.uid)
-          .updateUserData(email, name, age, blood);
+          .updateUserData(email, name, age, blood, userType);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -66,7 +68,10 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      User fire_user = _userFromFirebaseUser(user);
+      print(fire_user.uid);
+      print(await getSpecie(fire_user.uid));
+      return fire_user;
     } catch (e) {
       print(e.toString());
       switch (e.code) {
@@ -91,5 +96,15 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+
+  Future<String> getSpecie(String userId) async {
+    CollectionReference userCollection = Firestore.instance.collection('users');
+    DocumentReference documentReference = userCollection.document(userId);
+    String specie;
+    await documentReference.get().then((snapshot) {
+      specie = snapshot.data['userType'].toString();
+    });
+    return specie;
   }
 }

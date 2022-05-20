@@ -26,6 +26,8 @@ class _RegisterState extends State<Register> {
 
   bool loading = false;
 
+  String selectedValue = "Patient";
+
   @override
   Widget build(BuildContext context) {
     return loading
@@ -116,6 +118,22 @@ class _RegisterState extends State<Register> {
                               },
                               obscureText: true,
                             ),
+                            Row(
+                              children: [
+                                Text("Register As "),
+                                SizedBox(
+                                  width: 15.0,
+                                ),
+                                DropdownButton(
+                                    value: selectedValue,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        selectedValue = newValue;
+                                      });
+                                    },
+                                    items: dropdownItems),
+                              ],
+                            ),
                             SizedBox(
                               height: 20.0,
                             ),
@@ -145,6 +163,7 @@ class _RegisterState extends State<Register> {
                                     name,
                                     age,
                                     blood,
+                                    selectedValue,
                                   );
                                   //Validation
                                   if (result is String) {
@@ -203,4 +222,15 @@ class _RegisterState extends State<Register> {
             ),
           );
   }
+}
+
+List<DropdownMenuItem<String>> get dropdownItems {
+  List<DropdownMenuItem<String>> menuItems = [
+    DropdownMenuItem(child: Text("Patient"), value: "Patient"),
+    DropdownMenuItem(child: Text("Doctor"), value: "Doctor"),
+    DropdownMenuItem(child: Text("Nurse"), value: "Nurse"),
+    DropdownMenuItem(child: Text("Admin"), value: "Admin"),
+    DropdownMenuItem(child: Text("Staff"), value: "Staff"),
+  ];
+  return menuItems;
 }
